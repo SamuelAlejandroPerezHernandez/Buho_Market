@@ -1,0 +1,58 @@
+
+.modo-edicion {
+  cursor: default !important;
+  transform: none !important;
+  height: 420px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid #bb86fc !important; 
+  background-color: #000 !important;
+}
+
+
+
+/* Flechas del carrusel*/
+.modo-edicion .leftArrow__container,
+.modo-edicion .rightArrow__container {
+  background: rgba(0, 0, 0, 0.25) !important; 
+  border: 1px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+.modo-edicion .leftArrow__container:hover,
+.modo-edicion .rightArrow__container:hover {
+  background: rgb(115, 0, 255) !important;
+}
+
+/* Tarjeta inferior*/
+.modo-edicion .Card {
+  background: #000 !important;
+  border: 2px solid #bb86fc !important;
+  padding: 1rem !important;
+  align-items: center !important;
+}
+
+/* Título en morado claro */
+.modo-edicion .titulo {
+  color: #e0b0ff !important; 
+  text-shadow: none !important;
+  font-size: 1.5rem !important;
+}
+
+
+/* Botón de edición: */
+.modo-edicion .btn__edit {
+  background-color: #9c27b0 !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  max-width: 220px !important;
+  font-family: sans-serif !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.modo-edicion .btn__edit:hover {
+  background-color: #7b1fa2 !important;
+}
