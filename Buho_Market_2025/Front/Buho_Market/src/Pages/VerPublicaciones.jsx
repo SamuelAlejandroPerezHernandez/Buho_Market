@@ -5,65 +5,72 @@ import { useParams } from 'react-router-dom';
 import Card from '../Componets/Pagina_publicaciones/Publicacion_card';
 import Header from "../Componets/Pagina_principal/Header";
 import Footer from "../Componets/Pagina_principal/Footer";
+import { UserAuth } from "../context/AuthContext.jsx";
+import '../Css/Card.css';
 
 export default function VerPublicaciones() {
 
-    const { categoria } = useParams();
+    const { busqueda } = useParams();
+    const { user } = UserAuth();
+     
     const [publicacionesId, setPublicacionesId] = useState([]);
-    
-    /*logica para mostrar todas de golpe posdata solo usar si no se logra hacer lo de categorias hoy*/ 
-    /*useEffect(() => {
-        const publicId = async() => {
-            const obID = await supabase
-                .from('publicaciones')
-                .select('id');
-            
-            setPublicacionesId(obID.data || []);
-        }
-
-        
-
-        publicId();
-
-    }, [])*/
-    
 
     useEffect(() => {
         const publicByCategory = async() => {
-            let obCatId; /**para entender la logica comparando con lo anterior/ obID = obCatId*/
+            let obCatId;
 
-            if(categoria) {
-                obCatId = await supabase
-                .from('categorias')
-                .select('id')
-                .eq('nombre', categoria)
-                .single();
+            if(busqueda) {
+                if(busqueda === "Tecnología" || busqueda === "Literatura" || busqueda === "Accesorios"){
+                    obCatId = await supabase
+                    .from('categorias')
+                    .select('id')
+                    .eq('nombre', busqueda)
+                    .single();
 
-                if (obCatId.error || !obCatId.data) {
-                    setPublicacionesId([]);
-                    return;
+                    if (obCatId.error || !obCatId.data) {
+                        setPublicacionesId([]);
+                        return;
+                    }
+
+                    const categoriaId = obCatId.data.id;
+
+                    const puclicId = await supabase
+                    .from('publicaciones')
+                    .select('id')
+                    .eq('categoria_id', categoriaId);
+
+                    setPublicacionesId(puclicId.data || []);
                 }
 
-                const categoriaId = obCatId.data.id;
+                else if(busqueda === "Ver-mis-publicaciones"){
+                    const misPublic = await supabase
+                    .from('publicaciones')
+                    .select('id')
+                    .eq('usuario_id', user.id);
 
-                const puclicId = await supabase
-                .from('publicaciones')
-                .select('id')
-                .eq('categoria_id', categoriaId);
+                    setPublicacionesId(misPublic.data || []);
+                }
 
-                setPublicacionesId(puclicId.data || []);
+                else{
+                    const puclicId = await supabase 
+                    .from('publicaciones')
+                    .select('id')
+                    .ilike('titulo', `%${busqueda}%`);
+
+                    setPublicacionesId(puclicId.data || []);
+                }
             }
             else{
-                obCatId = await supabase
+                const puclicId = await supabase
                 .from('publicaciones')
                 .select('id');
-                setPublicacionesId(obCatId.data || []);
+                setPublicacionesId(puclicId.data || []);
             }
         }
 
         publicByCategory();
 
-    }, [categoria]);
+    }, [busqueda]);
     
     return (
         <div>
@@ -77,3 +84,4 @@ export default function VerPublicaciones() {
         </div>
     );
 }
+ 

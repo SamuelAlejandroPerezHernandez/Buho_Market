@@ -55,7 +55,7 @@
   overflow: hidden;
   padding: 0 1.5rem;
   transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-  background-color: #fffaf0; /* Crema más suave que #fff8dc */
+  background-color: #fffaf0; 
   color: #4a4a4a;
   line-height: 1.7;
   font-size: 1.02rem;

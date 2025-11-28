@@ -57,56 +57,76 @@ function Publicacion() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const insertarData = async() => {
-            const insrtarSB = await supabase
-            .from('publicaciones')
-            .insert({
-               titulo: titulo,
-               descripcion: descripcion,
-               precio: parseFloat(precio),
-               contacto: contacto,
-               categoria_id: categoriaId,
-               usuario_id: user.id,
-               propietario: userName
-            })
-            .select()
-            .single();
-
-            for (let i = 0; i < imagenes.length; i++) {
-                const file = imagenes[i];
-                const fileName = `${user.id}/${Date.now()}_${i}_${file.name}`;
-
-                
-                await supabase
-                .storage
-                .from('fotos-productos')
-                .upload(fileName, file)
-                
-                
-                const obtenerUrl = await supabase
-                .storage
-                .from('fotos-productos')
-                .getPublicUrl(fileName);
-
-                await supabase
-                .from('fotos_publicacion')
-                .insert({
-                    publicacion_id: insrtarSB.data.id,
-                    url_foto: obtenerUrl.data.publicUrl,
-                    orden: i + 1
-                })
-            }
-
-            setTitulo('');
-            setCategoriaId('');
-            setDescripcion('');
-            setPrecio('');
-            setContacto('');
-            setImagenes([]);
-
+        if(!titulo || !categoriaId || !precio || !contacto){
+            alert("debe completar todos los campos antes de publicar");
+            return;
         }
 
-        insertarData();
+        if(imagenes.length !== 5){
+            alert("debe ingresar 5 imagenes antes de publicar");
+            console.log('Cantidad de imágenes:', imagenes.length);
+            return;
+        }
+
+        try{
+            const insertarData = async() => {
+                const insrtarSB = await supabase
+                .from('publicaciones')
+                .insert({
+                titulo: titulo,
+                descripcion: descripcion,
+                precio: parseFloat(precio),
+                contacto: contacto,
+                categoria_id: categoriaId,
+                usuario_id: user.id,
+                propietario: userName
+                })
+                .select()
+                .single();
+
+                for (let i = 0; i < imagenes.length; i++) {
+                    const file = imagenes[i];
+                    const fileName = `${user.id}/${Date.now()}_${i}_${file.name}`;
+
+                    
+                    await supabase
+                    .storage
+                    .from('fotos-productos')
+                    .upload(fileName, file)
+                    
+                    
+                    const obtenerUrl = await supabase
+                    .storage
+                    .from('fotos-productos')
+                    .getPublicUrl(fileName);
+
+                    await supabase
+                    .from('fotos_publicacion')
+                    .insert({
+                        publicacion_id: insrtarSB.data.id,
+                        url_foto: obtenerUrl.data.publicUrl,
+                        orden: i + 1
+                    })
+                }
+
+                alert("¡Publicación creada exitosamente!");
+
+                setTitulo('');
+                setCategoriaId('');
+                setDescripcion('');
+                setPrecio('');
+                setContacto('');
+                setImagenes([]);
+
+            }
+
+                insertarData();
+        }
+        catch{
+            console.error("error al crear la publicacion:", error);
+            alert("Hubo un error al crear la publicacion");
+        }
+        
     }
 
     return (
