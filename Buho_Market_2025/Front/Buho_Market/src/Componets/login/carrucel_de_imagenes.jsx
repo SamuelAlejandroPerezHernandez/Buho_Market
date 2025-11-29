@@ -53,8 +53,8 @@ function carrucel(){
 
     return(
         
-            <div className="slider-container">
-                <div className="container-images">
+            <div className="img-container">
+                <div className="wrapper-images">
                     {contenidoImagen}
                 </div>
             </div>
